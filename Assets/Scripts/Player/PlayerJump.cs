@@ -11,11 +11,7 @@ public class PlayerJump : MonoBehaviour
     [Header("Normal Jump")]
     [SerializeField]
     private float jumpForce;
-    [Header("Wall Jump")]
-    [SerializeField]
-    private float wallJumpForceX;
-    [SerializeField]
-    private float wallJumpForceY;
+
     [Header("Wall Slip")]
     [SerializeField]
     private float slipForce;
@@ -82,18 +78,21 @@ public class PlayerJump : MonoBehaviour
     {
         if (!onCollision) return;
 
-        interpolateWallNormal = Vector3.zero;
+        bool foundGround = false;
+        bool foundWall = false;
 
-        foreach(KeyValuePair<GameObject, Vector3> key in collisions)
+        foreach (var collision in collisions)
         {
-            Vector3 temp = key.Value;
-            
-            interpolateWallNormal += temp;
+            float angle = Vector3.Angle(collision.Value, transform.up);
+
+            if (angle < 45f)
+                foundGround = true;
+
+            if (angle > 60f && angle < 120f)
+                foundWall = true;
         }
 
-        float colAngle = Vector3.Angle(interpolateWallNormal.normalized, transform.up);
-
-        onWall = (colAngle > 60.0f && colAngle < 120f) ? true : false;
+        onWall = foundWall && !foundGround;
     }
 
     private void OnCollisionEnter(Collision collision)
