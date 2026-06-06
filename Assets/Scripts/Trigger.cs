@@ -9,8 +9,8 @@ public class Trigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        aDesactivar?.SetActive(false);
-        aDesactivar?.SetActive(true);
+        aDesactivar.SetActive(false);
+        aActivar.SetActive(true);
 
         Destroy(gameObject);
     }
